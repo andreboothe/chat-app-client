@@ -19,7 +19,7 @@ class MessageList extends React.Component {
     }
     
     render() {
-        const {roomId} = this.props.auth;
+        const {roomId, user} = this.props.auth;
         if (!roomId) {
             return (
                 <div className="message-list">
@@ -28,13 +28,13 @@ class MessageList extends React.Component {
                     </div>
                 </div>
             )
-        }
-        
+        } 
         return (
             <div className="message-list">
                 {this.props.get.messageList.map((message, index) => {
+                    
                     return (
-                        <Message key={message.id} username={message.senderId} text={message.parts[0].payload.content} />
+                        <Message alignRight={message.senderId === user.id} key={message.id} username={message.senderId} text={message.parts[0].payload.content} />
                     )
                 })}
             </div>
