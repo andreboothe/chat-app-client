@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { connect } from "react-redux";
+
 import Message from './Message'
 
 class MessageList extends React.Component {
@@ -17,7 +19,8 @@ class MessageList extends React.Component {
     }
     
     render() {
-        if (!this.props.roomId) {
+        const {roomId} = this.props.auth;
+        if (!roomId) {
             return (
                 <div className="message-list">
                     <div className="join-room">
@@ -26,10 +29,10 @@ class MessageList extends React.Component {
                 </div>
             )
         }
-        console.log(this.props.messages[0])
+        
         return (
             <div className="message-list">
-                {this.props.messages.map((message, index) => {
+                {this.props.get.messageList.map((message, index) => {
                     return (
                         <Message key={message.id} username={message.senderId} text={message.parts[0].payload.content} />
                     )
@@ -39,4 +42,11 @@ class MessageList extends React.Component {
     }
 }
 
-export default MessageList
+const mapStateToProps = state => ({
+    auth: state.auth,
+    get: state.get
+});
+export default connect(
+    mapStateToProps,
+    {  }
+  )(MessageList);

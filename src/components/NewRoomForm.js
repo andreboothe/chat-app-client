@@ -1,4 +1,7 @@
 import React from 'react'
+import { connect } from "react-redux";
+import { createRoom } from "../actions/submitActions";
+import { getAllRooms } from "../actions/getActions";
 
 class NewRoomForm extends React.Component {
     
@@ -19,7 +22,13 @@ class NewRoomForm extends React.Component {
     
     handleSubmit(e) {
         e.preventDefault()
-        this.props.createRoom(this.state.roomName)
+        this.props.createRoom(this.props.auth.user,this.state.roomName)
+        .then(room => {
+            this.props.getAllRooms(this.props.auth.user);
+        })
+        // .then(room => this.subscribeToRoom(room.id))
+        .catch(err => console.log("err creating room", this.state.roomName))
+        
         this.setState({roomName: ''})
     }
     
@@ -40,4 +49,10 @@ class NewRoomForm extends React.Component {
     }
 }
 
-export default NewRoomForm
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+export default connect(
+    mapStateToProps,
+    { createRoom, getAllRooms }
+  )(NewRoomForm);

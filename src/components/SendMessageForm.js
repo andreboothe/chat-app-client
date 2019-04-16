@@ -1,4 +1,6 @@
 import React from 'react'
+import { connect } from "react-redux";
+import { sendMessage } from "../actions/submitActions";
 
 class SendMessageForm extends React.Component {
     
@@ -19,20 +21,20 @@ class SendMessageForm extends React.Component {
     
     handleSubmit(e) {
         e.preventDefault()
-        this.props.sendMessage(this.state.message)
+        this.props.sendMessage(this.props.auth.user, this.props.auth.roomId,this.state.message)
         this.setState({
             message: ''
         })
     }
     
     render() {
-        
+        const disabled = !this.props.auth.roomId;
         return (
             <form
                 onSubmit={this.handleSubmit}
                 className="send-message-form">
                 <input
-                    disabled={this.props.disabled}
+                    disabled={disabled}
                     onChange={this.handleChange}
                     value={this.state.message}
                     placeholder="Type your message and hit ENTER"
@@ -42,4 +44,10 @@ class SendMessageForm extends React.Component {
     }
 }
 
-export default SendMessageForm
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+export default connect(
+    mapStateToProps,
+    { sendMessage }
+  )(SendMessageForm);
